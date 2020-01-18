@@ -62,6 +62,7 @@
 </template>
 
 <script>
+import { reactive, ref, onMounted } from "@vue/composition-api";
 import {
   stripscript,
   validateEmail,
@@ -70,8 +71,10 @@ import {
 } from "@/utils/validate";
 export default {
   name: "login",
-  data() {
-    var validateUsername = (rule, value, callback) => {
+  // setup(prop, context) {
+  setup(prop, { refs }) {
+    //这里面放置data数据,生命周期,自定义函数
+    let validateUsername = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请输入用户名"));
       } else if (!validateEmail(value)) {
@@ -80,7 +83,7 @@ export default {
         callback();
       }
     };
-    var validatePassword = (rule, value, callback) => {
+    let validatePassword = (rule, value, callback) => {
       value = stripscript(value);
       if (value === "") {
         callback(new Error("请输入密码"));
@@ -90,7 +93,7 @@ export default {
         callback();
       }
     };
-    var validateConfirmPassword = (rule, value, callback) => {
+    let validateConfirmPassword = (rule, value, callback) => {
       value = stripscript(value);
       if (value === "") {
         callback(new Error("请再次输入密码"));
@@ -100,7 +103,7 @@ export default {
         callback();
       }
     };
-    var validateCaptcha = (rule, value, callback) => {
+    let validateCaptcha = (rule, value, callback) => {
       value = stripscript(value);
       if (value === "") {
         callback(new Error("请输入验证码"));
@@ -110,30 +113,29 @@ export default {
         callback();
       }
     };
-    return {
-      mode: "register",
-      ruleForm: {
-        username: "",
-        password: "",
-        captcha: "",
-        confirmPassword: ""
-      },
-      rules: {
-        username: [{ validator: validateUsername, trigger: "blur" }],
-        password: [{ validator: validatePassword, trigger: "blur" }],
-        confirmPassword: [
-          { validator: validateConfirmPassword, trigger: "blur" }
-        ],
-        captcha: [{ validator: validateCaptcha, trigger: "blur" }]
-      },
-      menuTab: [{ text: "登录" }, { text: "注册" }],
-      isActive: 0
-    };
-  },
-  created() {},
-  methods: {
-    submitForm(formName) {
-      this.$refs[formName].validate(valid => {
+    //对象数据声明
+    const menuTab = reactive([{ text: "登录" }, { text: "注册" }]);
+    const ruleForm = reactive({
+      username: "",
+      password: "",
+      captcha: "",
+      confirmPassword: ""
+    });
+    const rules = reactive({
+      username: [{ validator: validateUsername, trigger: "blur" }],
+      password: [{ validator: validatePassword, trigger: "blur" }],
+      confirmPassword: [
+        { validator: validateConfirmPassword, trigger: "blur" }
+      ],
+      captcha: [{ validator: validateCaptcha, trigger: "blur" }]
+    });
+    //基础数据类型声明
+    const isActive = ref(0);
+    //生命周期
+    onMounted(() => {});
+    //声明函数
+    const submitForm = formName => {
+      refs[formName].validate(valid => {
         if (valid) {
           alert("submit!");
         } else {
@@ -141,7 +143,14 @@ export default {
           return false;
         }
       });
-    }
+    };
+    return {
+      menuTab,
+      ruleForm,
+      rules,
+      isActive,
+      submitForm
+    };
   }
 };
 </script>
