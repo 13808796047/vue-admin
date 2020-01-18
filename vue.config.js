@@ -59,10 +59,10 @@ module.exports = {
     hotOnly: false,
     proxy: {
       "/api": {
-        target: "http://www.web.jshtml.cn/productapi", // 接口域名
+        target: "http://www.web-jshtml.cn", // 接口域名
         changeOrigin: true, //是否跨域
         pathRewrite: {
-          "^/api": "/api" //需要rewrite的,
+          "^/api": "/productapi" //需要rewrite的,
         }
       }
     },

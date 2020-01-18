@@ -7,7 +7,9 @@
           v-for="(item, index) in menuTab"
           :key="index"
           @click="isActive = index"
-        >{{ item.text }}</li>
+        >
+          {{ item.text }}
+        </li>
       </ul>
       <!--表单start-->
       <el-form
@@ -20,7 +22,11 @@
       >
         <el-form-item prop="username" class="form-item">
           <label for="username">邮箱</label>
-          <el-input type="text" v-model="ruleForm.username" autocomplete="off"></el-input>
+          <el-input
+            type="text"
+            v-model="ruleForm.username"
+            autocomplete="off"
+          ></el-input>
         </el-form-item>
         <el-form-item prop="password" class="form-item">
           <label for="password">密码</label>
@@ -32,7 +38,11 @@
             maxlength="20"
           ></el-input>
         </el-form-item>
-        <el-form-item prop="confirmPassword" class="form-item" v-if="isActive==1">
+        <el-form-item
+          prop="confirmPassword"
+          class="form-item"
+          v-if="isActive == 1"
+        >
           <label for="confirmPassword">重复密码</label>
           <el-input
             type="password"
@@ -46,15 +56,26 @@
           <label for="captcha">验证码</label>
           <el-row :gutter="10">
             <el-col :span="16">
-              <el-input v-model="ruleForm.captcha" minlength="6" maxlength="6"></el-input>
+              <el-input
+                v-model="ruleForm.captcha"
+                minlength="6"
+                maxlength="6"
+              ></el-input>
             </el-col>
             <el-col :span="8">
-              <el-button type="success" class="block" @click="getSms">获取验证码</el-button>
+              <el-button type="success" class="block" @click="getSms"
+                >获取验证码</el-button
+              >
             </el-col>
           </el-row>
         </el-form-item>
         <el-form-item class="form-item">
-          <el-button type="danger" @click="submitForm('ruleForm')" class="login-btn block">提交</el-button>
+          <el-button
+            type="danger"
+            @click="submitForm('ruleForm')"
+            class="login-btn block"
+            >提交</el-button
+          >
         </el-form-item>
       </el-form>
     </div>
@@ -136,7 +157,7 @@ export default {
     onMounted(() => {});
     //声明函数
     const getSms = () => {
-      GetSms();
+      GetSms({ username: ruleForm.username });
     };
     const submitForm = formName => {
       refs[formName].validate(valid => {
