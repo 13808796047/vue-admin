@@ -1,6 +1,10 @@
 import axios from "axios";
 //创建axios实例
-const instance = axios.create();
+const BASEURL = process.env.NODE_ENV === "production" ? "" : "/api";
+const instance = axios.create({
+  baseURL: BASEURL,
+  timeout: 100000
+});
 // 添加请求拦截器
 instance.interceptors.request.use(
   function(config) {

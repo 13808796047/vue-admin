@@ -49,7 +49,7 @@
               <el-input v-model="ruleForm.captcha" minlength="6" maxlength="6"></el-input>
             </el-col>
             <el-col :span="8">
-              <el-button type="success" class="block">获取验证码</el-button>
+              <el-button type="success" class="block" @click="getSms">获取验证码</el-button>
             </el-col>
           </el-row>
         </el-form-item>
@@ -62,6 +62,7 @@
 </template>
 
 <script>
+import { GetSms } from "@/api/login";
 import { reactive, ref, onMounted } from "@vue/composition-api";
 import {
   stripscript,
@@ -134,6 +135,9 @@ export default {
     //生命周期
     onMounted(() => {});
     //声明函数
+    const getSms = () => {
+      GetSms();
+    };
     const submitForm = formName => {
       refs[formName].validate(valid => {
         if (valid) {
@@ -149,7 +153,8 @@ export default {
       ruleForm,
       rules,
       isActive,
-      submitForm
+      submitForm,
+      getSms
     };
   }
 };
