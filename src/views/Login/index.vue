@@ -23,6 +23,7 @@
         <el-form-item prop="username" class="form-item">
           <label for="username">邮箱</label>
           <el-input
+            id="username"
             type="text"
             v-model="ruleForm.username"
             autocomplete="off"
@@ -31,6 +32,7 @@
         <el-form-item prop="password" class="form-item">
           <label for="password">密码</label>
           <el-input
+            id="password"
             type="password"
             v-model="ruleForm.password"
             autocomplete="off"
@@ -45,6 +47,7 @@
         >
           <label for="confirmPassword">重复密码</label>
           <el-input
+            id="confirmPassword"
             type="password"
             v-model="ruleForm.confirmPassword"
             autocomplete="off"
@@ -57,6 +60,7 @@
           <el-row :gutter="10">
             <el-col :span="16">
               <el-input
+                id="captcha"
                 v-model="ruleForm.captcha"
                 minlength="6"
                 maxlength="6"
@@ -74,7 +78,8 @@
             type="danger"
             @click="submitForm('ruleForm')"
             class="login-btn block"
-            >提交</el-button
+            :disabled="loginButtonStatus"
+            >{{ isActive == 0 ? "登录" : "注册" }}</el-button
           >
         </el-form-item>
       </el-form>
@@ -94,7 +99,7 @@ import {
 export default {
   name: "login",
   // setup(prop, context) {
-  setup(prop, { refs }) {
+  setup(prop, { refs, root }) {
     //这里面放置data数据,生命周期,自定义函数
     let validateUsername = (rule, value, callback) => {
       if (value === "") {
@@ -153,11 +158,26 @@ export default {
     });
     //基础数据类型声明
     const isActive = ref(0);
+    //登录按钮禁用状态
+    const loginButtonStatus = ref(true);
     //生命周期
     onMounted(() => {});
     //声明函数
     const getSms = () => {
-      GetSms({ username: ruleForm.username });
+      //进行提示
+      if (ruleForm.username == "") {
+        root.$message.error("邮箱不能为空！");
+        return false;
+      }
+      if (!validateEmail(ruleForm.username)) {
+        root.$message.error("邮箱格式有误请重新输入!");
+        return false;
+      }
+      //请求接口 获取验证码
+      let data = { username: ruleForm.username, module: "login" };
+      GetSms(data)
+        .then(value => {})
+        .catch(reason => {});
     };
     const submitForm = formName => {
       refs[formName].validate(valid => {
@@ -174,6 +194,7 @@ export default {
       ruleForm,
       rules,
       isActive,
+      loginButtonStatus,
       submitForm,
       getSms
     };

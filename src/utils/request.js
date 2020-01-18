@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Message } from "element-ui";
 //创建axios实例
 const BASEURL = process.env.NODE_ENV === "production" ? "" : "/api";
 const instance = axios.create({
@@ -21,7 +22,13 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   function(response) {
     // 对响应数据做点什么
-    return response;
+    let data = response.data;
+    if (data.resCode !== 0) {
+      Message.error(data.message);
+      return Promise.reject(data);
+    } else {
+      return response;
+    }
   },
   function(error) {
     // 对响应错误做点什么
