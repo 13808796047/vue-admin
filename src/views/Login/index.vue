@@ -32,11 +32,21 @@
             maxlength="20"
           ></el-input>
         </el-form-item>
+        <el-form-item prop="confirmPassword" class="form-item" v-if="isActive==1">
+          <label for="confirmPassword">重复密码</label>
+          <el-input
+            type="password"
+            v-model="ruleForm.confirmPassword"
+            autocomplete="off"
+            minlength="6"
+            maxlength="20"
+          ></el-input>
+        </el-form-item>
         <el-form-item prop="captcha" class="form-item">
           <label for="captcha">验证码</label>
           <el-row :gutter="10">
             <el-col :span="16">
-              <el-input v-model.number="ruleForm.captcha" minlength="6" maxlength="6"></el-input>
+              <el-input v-model="ruleForm.captcha" minlength="6" maxlength="6"></el-input>
             </el-col>
             <el-col :span="8">
               <el-button type="success" class="block">获取验证码</el-button>
@@ -52,48 +62,68 @@
 </template>
 
 <script>
+import {
+  stripscript,
+  validateEmail,
+  validatePass,
+  validateCode
+} from "@/utils/validate";
 export default {
   name: "login",
   data() {
     var validateUsername = (rule, value, callback) => {
-      let reg = /^w[-w.+]*@([A-Za-z0-9][-A-Za-z0-9]+.)+[A-Za-z]{2,14}$/;
       if (value === "") {
         callback(new Error("请输入用户名"));
-      } else if (!reg.test(value)) {
+      } else if (!validateEmail(value)) {
         callback(new Error("用户名格式有误"));
       } else {
         callback();
       }
     };
     var validatePassword = (rule, value, callback) => {
-      let reg = /^(?!\d+$)(?![^a-zA-Z]+$)\S{6,20}$/;
+      value = stripscript(value);
       if (value === "") {
         callback(new Error("请输入密码"));
-      } else if (!reg.test(value)) {
+      } else if (!validatePass(value)) {
         callback(new Error("密码为6至20位的数字+字符"));
       } else {
         callback();
       }
     };
+    var validateConfirmPassword = (rule, value, callback) => {
+      value = stripscript(value);
+      if (value === "") {
+        callback(new Error("请再次输入密码"));
+      } else if (value != this.ruleForm.password) {
+        callback(new Error("重复密码不正确"));
+      } else {
+        callback();
+      }
+    };
     var validateCaptcha = (rule, value, callback) => {
-      let reg = /^[a-z0-9]{6}$/;
+      value = stripscript(value);
       if (value === "") {
         callback(new Error("请输入验证码"));
-      } else if (!reg.test(value)) {
+      } else if (!validateCode(value)) {
         callback(new Error("验证码格式有误"));
       } else {
         callback();
       }
     };
     return {
+      mode: "register",
       ruleForm: {
         username: "",
         password: "",
-        captcha: ""
+        captcha: "",
+        confirmPassword: ""
       },
       rules: {
         username: [{ validator: validateUsername, trigger: "blur" }],
         password: [{ validator: validatePassword, trigger: "blur" }],
+        confirmPassword: [
+          { validator: validateConfirmPassword, trigger: "blur" }
+        ],
         captcha: [{ validator: validateCaptcha, trigger: "blur" }]
       },
       menuTab: [{ text: "登录" }, { text: "注册" }],
