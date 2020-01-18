@@ -6,3 +6,10 @@ export function GetSms(data) {
     data
   });
 }
+export function Register(data) {
+  return instance.request({
+    method: "post",
+    url: "/register/",
+    data
+  });
+}

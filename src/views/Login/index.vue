@@ -3,10 +3,10 @@
     <div class="login-wrap">
       <ul class="menu-tab">
         <li
-          :class="{ current: isActive == index }"
+          :class="{ current: isActive == item.type }"
           v-for="(item, index) in menuTab"
           :key="index"
-          @click="isActive = index"
+          @click="toggleMenu(item.type)"
         >
           {{ item.text }}
         </li>
@@ -43,7 +43,7 @@
         <el-form-item
           prop="confirmPassword"
           class="form-item"
-          v-if="isActive == 1"
+          v-if="isActive == 'register'"
         >
           <label for="confirmPassword">重复密码</label>
           <el-input
@@ -67,8 +67,12 @@
               ></el-input>
             </el-col>
             <el-col :span="8">
-              <el-button type="success" class="block" @click="getSms"
-                >获取验证码</el-button
+              <el-button
+                type="success"
+                class="block"
+                @click="getSms"
+                :disabled="codeButtonStatus.status"
+                >{{ codeButtonStatus.text }}</el-button
               >
             </el-col>
           </el-row>
@@ -79,7 +83,7 @@
             @click="submitForm('ruleForm')"
             class="login-btn block"
             :disabled="loginButtonStatus"
-            >{{ isActive == 0 ? "登录" : "注册" }}</el-button
+            >{{ isActive == "login" ? "登录" : "注册" }}</el-button
           >
         </el-form-item>
       </el-form>
@@ -88,7 +92,7 @@
 </template>
 
 <script>
-import { GetSms } from "@/api/login";
+import { GetSms, Register } from "@/api/login";
 import { reactive, ref, onMounted } from "@vue/composition-api";
 import {
   stripscript,
@@ -124,7 +128,7 @@ export default {
       value = stripscript(value);
       if (value === "") {
         callback(new Error("请再次输入密码"));
-      } else if (value != this.ruleForm.password) {
+      } else if (value != ruleForm.password) {
         callback(new Error("重复密码不正确"));
       } else {
         callback();
@@ -141,7 +145,10 @@ export default {
       }
     };
     //对象数据声明
-    const menuTab = reactive([{ text: "登录" }, { text: "注册" }]);
+    const menuTab = reactive([
+      { text: "登录", type: "login" },
+      { text: "注册", type: "register" }
+    ]);
     const ruleForm = reactive({
       username: "",
       password: "",
@@ -157,9 +164,15 @@ export default {
       captcha: [{ validator: validateCaptcha, trigger: "blur" }]
     });
     //基础数据类型声明
-    const isActive = ref(0);
+    const isActive = ref("login");
     //登录按钮禁用状态
     const loginButtonStatus = ref(true);
+    const codeButtonStatus = reactive({
+      status: false,
+      text: "获取验证码"
+    });
+    //倒计时
+    const timer = ref(null);
     //生命周期
     onMounted(() => {});
     //声明函数
@@ -174,15 +187,60 @@ export default {
         return false;
       }
       //请求接口 获取验证码
-      let data = { username: ruleForm.username, module: "login" };
+      let data = { username: ruleForm.username, module: isActive.value };
+      //修改验证码按钮的状态
+      codeButtonStatus.status = true;
+      codeButtonStatus.text = "发送中...";
       GetSms(data)
-        .then(value => {})
+        .then(value => {
+          let data = value.data;
+          root.$message({
+            message: data.message,
+            type: "success"
+          });
+          //启用登录或注册按钮
+          loginButtonStatus.value = false;
+          //调定时器
+          countDown(5);
+        })
         .catch(reason => {});
+    };
+    //倒计时
+    const countDown = time => {
+      timer.value = setInterval(_ => {
+        time--;
+        if (time === 0) {
+          clearInterval(timer.value);
+          codeButtonStatus.status = false;
+          codeButtonStatus.text = "重新发送";
+        } else {
+          codeButtonStatus.text = `倒计时${time}秒`;
+        }
+      }, 1000);
+    };
+    //切换
+    const toggleMenu = type => {
+      isActive.value = type;
+      refs.ruleForm.resetFields();
     };
     const submitForm = formName => {
       refs[formName].validate(valid => {
         if (valid) {
-          alert("submit!");
+          let data = {
+            username: ruleForm.username,
+            password: ruleForm.password,
+            code: ruleForm.captcha,
+            module: "register"
+          };
+          Register(data)
+            .then(value => {
+              let data = value.data;
+              root.$message({
+                message: data.message,
+                type: "success"
+              });
+            })
+            .catch(reason => {});
         } else {
           console.log("error submit!!");
           return false;
@@ -195,6 +253,8 @@ export default {
       rules,
       isActive,
       loginButtonStatus,
+      codeButtonStatus,
+      toggleMenu,
       submitForm,
       getSms
     };
