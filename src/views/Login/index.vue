@@ -258,7 +258,11 @@ export default {
         code: ruleForm.captcha
       };
       Login(data)
-        .then(value => {})
+        .then(value => {
+          root.$router.push({
+            name: "Dashboard"
+          });
+        })
         .catch(reason => {});
     };
     //注册

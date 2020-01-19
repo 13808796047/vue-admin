@@ -11,6 +11,18 @@ const routes = [
     path: "/login",
     name: "Login",
     component: () => import("@/views/Login/index")
+  },
+  {
+    path: "/dashboard",
+    name: "Dashboard",
+    component: () => import("@/views/Layout/index"),
+    children: [
+      {
+        path: "/dashboard",
+        name: "Dashboard",
+        component: () => import("@/views/Dashboard/index")
+      }
+    ]
   }
 ];
 
