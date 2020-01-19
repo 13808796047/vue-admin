@@ -11,23 +11,23 @@
       active-text-color="#fff"
       router
     >
-      <template v-for="(item,index) in routers">
-        <el-submenu v-if="!item.hidden" :key="item.id" :index="index+''">
+      <template v-for="(item, index) in routers">
+        <el-submenu v-if="!item.hidden" :key="item.id" :index="index + ''">
           <template slot="title">
-            <i class="el-icon-location"></i>
-            <span slot="title">{{item.meta.name}}</span>
+            <svg-icon :iconName="item.meta.icon" :iconClass="item.meta.icon" />
+            <span slot="title">{{ item.meta.name }}</span>
           </template>
           <el-menu-item-group>
             <el-menu-item
               v-for="subItem in item.children"
               :key="subItem.id"
               :index="subItem.path"
-            >{{subItem.meta.name}}</el-menu-item>
+              >{{ subItem.meta.name }}</el-menu-item
+            >
           </el-menu-item-group>
         </el-submenu>
       </template>
     </el-menu>
-    <svg-icon iconName="user" iconClass="user font12" />
   </div>
 </template>
 
@@ -67,5 +67,9 @@ export default {
   height: 100vh;
   width: $navMenu;
   background: #344a5f;
+  svg {
+    font-size: 20px;
+    margin-right: 10px;
+  }
 }
 </style>

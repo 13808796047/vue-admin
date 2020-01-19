@@ -7,7 +7,9 @@
           v-for="(item, index) in menuTab"
           :key="index"
           @click="toggleMenu(item.type)"
-        >{{ item.text }}</li>
+        >
+          {{ item.text }}
+        </li>
       </ul>
       <!--表单start-->
       <el-form
@@ -20,7 +22,12 @@
       >
         <el-form-item prop="username" class="form-item">
           <label for="username">邮箱</label>
-          <el-input id="username" type="text" v-model="ruleForm.username" autocomplete="off"></el-input>
+          <el-input
+            id="username"
+            type="text"
+            v-model="ruleForm.username"
+            autocomplete="off"
+          ></el-input>
         </el-form-item>
         <el-form-item prop="password" class="form-item">
           <label for="password">密码</label>
@@ -33,7 +40,11 @@
             maxlength="20"
           ></el-input>
         </el-form-item>
-        <el-form-item prop="confirmPassword" class="form-item" v-if="isActive == 'register'">
+        <el-form-item
+          prop="confirmPassword"
+          class="form-item"
+          v-if="isActive == 'register'"
+        >
           <label for="confirmPassword">重复密码</label>
           <el-input
             id="confirmPassword"
@@ -48,7 +59,12 @@
           <label for="captcha">验证码</label>
           <el-row :gutter="10">
             <el-col :span="16">
-              <el-input id="captcha" v-model="ruleForm.captcha" minlength="6" maxlength="6"></el-input>
+              <el-input
+                id="captcha"
+                v-model="ruleForm.captcha"
+                minlength="6"
+                maxlength="6"
+              ></el-input>
             </el-col>
             <el-col :span="8">
               <el-button
@@ -56,7 +72,8 @@
                 class="block"
                 @click="getSms"
                 :disabled="codeButtonStatus.status"
-              >{{ codeButtonStatus.text }}</el-button>
+                >{{ codeButtonStatus.text }}</el-button
+              >
             </el-col>
           </el-row>
         </el-form-item>
@@ -66,7 +83,8 @@
             @click="submitForm('ruleForm')"
             class="login-btn block"
             :disabled="loginButtonStatus"
-          >{{ isActive == "login" ? "登录" : "注册" }}</el-button>
+            >{{ isActive == "login" ? "登录" : "注册" }}</el-button
+          >
         </el-form-item>
       </el-form>
     </div>
