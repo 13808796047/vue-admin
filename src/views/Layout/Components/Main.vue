@@ -1,5 +1,7 @@
 <template>
-  <div id="main-wrap">fafdasfds内容</div>
+  <div id="main-wrap">
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
