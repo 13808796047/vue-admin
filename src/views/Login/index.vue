@@ -7,9 +7,7 @@
           v-for="(item, index) in menuTab"
           :key="index"
           @click="toggleMenu(item.type)"
-        >
-          {{ item.text }}
-        </li>
+        >{{ item.text }}</li>
       </ul>
       <!--表单start-->
       <el-form
@@ -22,12 +20,7 @@
       >
         <el-form-item prop="username" class="form-item">
           <label for="username">邮箱</label>
-          <el-input
-            id="username"
-            type="text"
-            v-model="ruleForm.username"
-            autocomplete="off"
-          ></el-input>
+          <el-input id="username" type="text" v-model="ruleForm.username" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item prop="password" class="form-item">
           <label for="password">密码</label>
@@ -40,11 +33,7 @@
             maxlength="20"
           ></el-input>
         </el-form-item>
-        <el-form-item
-          prop="confirmPassword"
-          class="form-item"
-          v-if="isActive == 'register'"
-        >
+        <el-form-item prop="confirmPassword" class="form-item" v-if="isActive == 'register'">
           <label for="confirmPassword">重复密码</label>
           <el-input
             id="confirmPassword"
@@ -59,12 +48,7 @@
           <label for="captcha">验证码</label>
           <el-row :gutter="10">
             <el-col :span="16">
-              <el-input
-                id="captcha"
-                v-model="ruleForm.captcha"
-                minlength="6"
-                maxlength="6"
-              ></el-input>
+              <el-input id="captcha" v-model="ruleForm.captcha" minlength="6" maxlength="6"></el-input>
             </el-col>
             <el-col :span="8">
               <el-button
@@ -72,8 +56,7 @@
                 class="block"
                 @click="getSms"
                 :disabled="codeButtonStatus.status"
-                >{{ codeButtonStatus.text }}</el-button
-              >
+              >{{ codeButtonStatus.text }}</el-button>
             </el-col>
           </el-row>
         </el-form-item>
@@ -83,8 +66,7 @@
             @click="submitForm('ruleForm')"
             class="login-btn block"
             :disabled="loginButtonStatus"
-            >{{ isActive == "login" ? "登录" : "注册" }}</el-button
-          >
+          >{{ isActive == "login" ? "登录" : "注册" }}</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -92,7 +74,7 @@
 </template>
 
 <script>
-import { GetSms, Register } from "@/api/login";
+import { GetSms, Register, Login } from "@/api/login";
 import { reactive, ref, onMounted } from "@vue/composition-api";
 import {
   stripscript,
@@ -207,6 +189,8 @@ export default {
     };
     //倒计时
     const countDown = time => {
+      //判断定时器是否存在
+      if (timer.value) clearInterval(timer.value);
       timer.value = setInterval(_ => {
         time--;
         if (time === 0) {
@@ -218,6 +202,18 @@ export default {
         }
       }, 1000);
     };
+    //清除倒计时
+    const clearCountDown = () => {
+      //还原验证码默认状态
+      codeButtonStatus.status = false;
+      codeButtonStatus.text = "获取验证码";
+      //清除倒计时
+      clearInterval(timer.value);
+      // const codeButtonStatus = reactive({
+      //   status: false,
+      //   text: "获取验证码"
+      // });
+    };
     //切换
     const toggleMenu = type => {
       isActive.value = type;
@@ -226,26 +222,42 @@ export default {
     const submitForm = formName => {
       refs[formName].validate(valid => {
         if (valid) {
-          let data = {
-            username: ruleForm.username,
-            password: ruleForm.password,
-            code: ruleForm.captcha,
-            module: "register"
-          };
-          Register(data)
-            .then(value => {
-              let data = value.data;
-              root.$message({
-                message: data.message,
-                type: "success"
-              });
-            })
-            .catch(reason => {});
+          isActive.value === "login" ? login() : register();
         } else {
-          console.log("error submit!!");
           return false;
         }
       });
+    };
+    //登录
+    const login = () => {
+      let data = {
+        username: ruleForm.username,
+        password: ruleForm.password,
+        code: ruleForm.captcha
+      };
+      Login(data)
+        .then(value => {})
+        .catch(reason => {});
+    };
+    //注册
+    const register = () => {
+      let data = {
+        username: ruleForm.username,
+        password: ruleForm.password,
+        code: ruleForm.captcha,
+        module: "register"
+      };
+      Register(data)
+        .then(value => {
+          let data = value.data;
+          root.$message({
+            message: data.message,
+            type: "success"
+          });
+          toggleMenu(menuTab[0].type);
+          clearCountDown();
+        })
+        .catch(reason => {});
     };
     return {
       menuTab,
