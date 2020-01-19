@@ -20,13 +20,11 @@ export default {
     }
   },
   setup(props) {
-    console.log(props.iconClass);
-
     //计算属性
     const icon_name = computed(_ => `#icon-${props.iconName}`);
-    const svgClass = computed(_ => {
-      return props.iconClass ? `svg-icon ${props.iconClass}` : `svg-icon`;
-    });
+    const svgClass = computed(_ =>
+      props.iconClass ? `svg-icon ${props.iconClass}` : `svg-icon`
+    );
     return {
       icon_name,
       svgClass

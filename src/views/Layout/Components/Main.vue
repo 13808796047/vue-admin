@@ -31,12 +31,24 @@ export default {};
     padding-right: 30px;
     padding-bottom: 30px;
     box-sizing: border-box;
+    @include webkit(transition, all 0.3s ease 0s);
   }
+
   .content {
     width: 100%;
     height: 100%;
     box-sizing: border-box;
     background: #fff;
+  }
+}
+.open {
+  #main-wrap .main-content {
+    padding-left: $navMenu + 30;
+  }
+}
+.close {
+  #main-wrap .main-content {
+    padding-left: 94px;
   }
 }
 </style>

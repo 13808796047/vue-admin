@@ -4,8 +4,6 @@
     <el-menu
       default-active="1-4-1"
       class="el-menu-vertical-demo"
-      @open="handleOpen"
-      @close="handleClose"
       :collapse="isCollapse"
       background-color="transparent"
       text-color="#fff"
@@ -33,27 +31,20 @@
 </template>
 
 <script>
-import { ref, reactive } from "@vue/composition-api";
+import { ref, reactive, computed } from "@vue/composition-api";
 export default {
   name: "navMenu",
   setup(props, { root }) {
     //变量
-    const isCollapse = ref(false);
     const routers = reactive(root.$router.options.routes);
-
+    // 计算属性
+    const isCollapse = computed(_ => root.$store.state.isCollapse);
     //函数
-    const handleOpen = (key, keyPath) => {
-      console.log(key, keyPath);
-    };
-    const handleClose = (key, keyPath) => {
-      console.log(key, keyPath);
-    };
+
     //返回
     return {
       isCollapse,
-      routers,
-      handleOpen,
-      handleClose
+      routers
     };
   }
 };
@@ -75,9 +66,20 @@ export default {
   height: 100vh;
   width: $navMenu;
   background: #344a5f;
+  @include webkit(transition, all 0.3s ease 0s);
   svg {
     font-size: 20px;
     margin-right: 10px;
+  }
+}
+.open {
+  #nav-warp {
+    width: $navMenu;
+  }
+}
+.close {
+  #nav-warp {
+    width: 64px;
   }
 }
 </style>
