@@ -58,6 +58,7 @@ export default {
     img {
       width: 92px;
       margin: 28px auto 25px;
+      @include webkit(transition, all 0.3s ease 0s);
     }
   }
   position: fixed;
@@ -80,6 +81,17 @@ export default {
 .close {
   #nav-warp {
     width: 64px;
+    .logo > img {
+      margin: 10px auto;
+      width: 60%;
+    }
+    .el-submenu {
+      &.is-opened {
+        > .el-submenu__title {
+          background: red;
+        }
+      }
+    }
   }
 }
 </style>
