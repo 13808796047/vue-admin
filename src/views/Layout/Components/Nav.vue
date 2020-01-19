@@ -11,8 +11,8 @@
       active-text-color="#fff"
       router
     >
-      <template v-for="(item) in routers">
-        <el-submenu v-if="!item.hidden" :key="item.id" :index="item.path">
+      <template v-for="(item,index) in routers">
+        <el-submenu v-if="!item.hidden" :key="item.id" :index="index+''">
           <template slot="title">
             <i class="el-icon-location"></i>
             <span slot="title">{{item.meta.name}}</span>
@@ -27,6 +27,7 @@
         </el-submenu>
       </template>
     </el-menu>
+    <svg-icon iconName="user" iconClass="user font12" />
   </div>
 </template>
 
