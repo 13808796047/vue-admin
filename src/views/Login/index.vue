@@ -171,8 +171,12 @@ export default {
       //请求接口 获取验证码
       let data = { username: ruleForm.username, module: isActive.value };
       //修改验证码按钮的状态
-      codeButtonStatus.status = true;
-      codeButtonStatus.text = "发送中...";
+      // codeButtonStatus.status = true;
+      // codeButtonStatus.text = "发送中...";
+      updateButtonStatus({
+        status: true,
+        text: "发送中..."
+      });
       GetSms(data)
         .then(value => {
           let data = value.data;
@@ -195,8 +199,12 @@ export default {
         time--;
         if (time === 0) {
           clearInterval(timer.value);
-          codeButtonStatus.status = false;
-          codeButtonStatus.text = "重新发送";
+          // codeButtonStatus.status = false;
+          // codeButtonStatus.text = "重新发送";
+          updateButtonStatus({
+            status: false,
+            text: "重新发送"
+          });
         } else {
           codeButtonStatus.text = `倒计时${time}秒`;
         }
@@ -205,8 +213,12 @@ export default {
     //清除倒计时
     const clearCountDown = () => {
       //还原验证码默认状态
-      codeButtonStatus.status = false;
-      codeButtonStatus.text = "获取验证码";
+      // codeButtonStatus.status = false;
+      // codeButtonStatus.text = "获取验证码";
+      updateButtonStatus({
+        status: false,
+        text: "获取验证码"
+      });
       //清除倒计时
       clearInterval(timer.value);
       // const codeButtonStatus = reactive({
@@ -214,9 +226,19 @@ export default {
       //   text: "获取验证码"
       // });
     };
+    //更新按钮的状态
+    const updateButtonStatus = params => {
+      codeButtonStatus.status = params.status;
+      codeButtonStatus.text = params.text;
+    };
     //切换
     const toggleMenu = type => {
       isActive.value = type;
+      resetFields();
+      clearCountDown();
+    };
+    //清除表单数据
+    const resetFields = () => {
       refs.ruleForm.resetFields();
     };
     const submitForm = formName => {
@@ -266,6 +288,7 @@ export default {
       isActive,
       loginButtonStatus,
       codeButtonStatus,
+      updateButtonStatus,
       toggleMenu,
       submitForm,
       getSms
