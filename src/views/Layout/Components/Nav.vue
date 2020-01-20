@@ -38,7 +38,7 @@ export default {
     //变量
     const routers = reactive(root.$router.options.routes);
     // 计算属性
-    const isCollapse = computed(_ => root.$store.state.isCollapse);
+    const isCollapse = computed(_ => root.$store.state.app.isCollapse);
     //函数
 
     //返回

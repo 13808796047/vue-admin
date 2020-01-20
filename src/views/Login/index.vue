@@ -92,7 +92,7 @@
 </template>
 
 <script>
-import { GetSms, Register, Login } from "@/api/login";
+import { GetSms, Register } from "@/api/login";
 import { reactive, ref, onMounted } from "@vue/composition-api";
 import {
   stripscript,
@@ -275,10 +275,11 @@ export default {
         password: ruleForm.password,
         code: ruleForm.captcha
       };
-      Login(data)
+      root.$store
+        .dispatch("login", data)
         .then(value => {
           root.$router.push({
-            name: "Dashboard"
+            name: "Layout"
           });
         })
         .catch(reason => {});
