@@ -1,17 +1,12 @@
 import { Login } from "@/api/login";
-const app = {
+
+export default {
+  namespaced: true,
   state: {
     // isCollapse: JSON.parse(Cookie("isCollapse")) || false
     isCollapse: JSON.parse(sessionStorage.getItem("isCollapse")) || false
   },
   getters: {},
-  mutations: {
-    SET_COLLAPSE(state) {
-      state.isCollapse = !state.isCollapse;
-      //本地存储
-      sessionStorage.setItem("isCollapse", JSON.stringify(state.isCollapse));
-    }
-  },
   actions: {
     login(content, data) {
       return new Promise((resolve, reject) => {
@@ -24,6 +19,12 @@ const app = {
           });
       });
     }
+  },
+  mutations: {
+    SET_COLLAPSE(state) {
+      state.isCollapse = !state.isCollapse;
+      //本地存储
+      sessionStorage.setItem("isCollapse", JSON.stringify(state.isCollapse));
+    }
   }
 };
-export default app;
