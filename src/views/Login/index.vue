@@ -276,7 +276,7 @@ export default {
         code: ruleForm.captcha
       };
       root.$store
-        .dispatch("login", data)
+        .dispatch("app/login", data)
         .then(value => {
           root.$router.push({
             name: "Layout"

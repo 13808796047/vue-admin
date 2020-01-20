@@ -73,7 +73,7 @@ module.exports = {
         target: "http://www.web-jshtml.cn", // 接口域名
         changeOrigin: true, //是否跨域
         pathRewrite: {
-          "^/api": "/productapi" //需要rewrite的,
+          "^/api": "/productapi/token" //需要rewrite的,
         }
       }
     },

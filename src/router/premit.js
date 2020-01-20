@@ -8,4 +8,5 @@ router.beforeEach((to, from, next) => {
     whiteRouter.indexOf(to.path) != -1 ? next() : next("/login");
   }
   //路由动态添加,分配菜单,每个角色分配不同的菜单
+  next();
 });
