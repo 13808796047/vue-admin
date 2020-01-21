@@ -1,7 +1,9 @@
 <template>
   <div id="main-wrap">
     <div class="main-content">
-      <div class="content"><router-view /></div>
+      <div class="content">
+        <router-view />
+      </div>
     </div>
   </div>
 </template>
@@ -37,6 +39,7 @@ export default {};
   .content {
     width: 100%;
     height: 100%;
+    padding: 30px;
     box-sizing: border-box;
     background: #fff;
   }
