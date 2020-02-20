@@ -7,7 +7,17 @@ $layoutHeader: 75px;
   -webkit-#{$type}: $value;
   #{$type}: $value;
 }
-
+@mixin labelDom($align, $width, $line-height) {
+  label {
+    float: left;
+    line-height: $line-height + px;
+    width: $width + px;
+    text-align: $align;
+  }
+  .wrap-content {
+    margin-left: $width + px;
+  }
+}
 .close {
   .el-submenu {
     &.is-opened {
