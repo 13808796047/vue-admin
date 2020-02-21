@@ -5,7 +5,7 @@
         <div class="label-wrap category">
           <label for>类型</label>
           <div class="wrap-content">
-            <el-select v-model="value" placeholder="请选择" style="width:100%">
+            <el-select v-model="category" placeholder="请选择" style="width:100%">
               <el-option
                 v-for="item in options"
                 :key="item.value"
@@ -21,7 +21,7 @@
           <label for>日期:&nbsp;&nbsp;</label>
           <div class="wrap-content">
             <el-date-picker
-              v-model="value2"
+              v-model="date"
               type="datetimerange"
               align="right"
               start-placeholder="开始日期"
@@ -55,7 +55,7 @@
       </el-col>
       <el-col :span="3">&nbsp;</el-col>
       <el-col :span="2">
-        <el-button type="danger" class="pull-right" size="medium">新增</el-button>
+        <el-button type="danger" class="pull-right" size="medium" @click="dialogInfo=true">新增</el-button>
       </el-col>
     </el-row>
     <div class="block-space-30"></div>
@@ -84,7 +84,6 @@
           background
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :current-page="currentPage4"
           :page-sizes="[100, 200, 300, 400]"
           :page-size="100"
           layout="total, sizes, prev, pager, next, jumper"
@@ -92,13 +91,24 @@
         ></el-pagination>
       </el-col>
     </el-row>
+    <!-- 新增窗口 -->
+    <DialogInfo :visible.sync="dialogInfo" />
   </div>
 </template>
 
 <script>
 import { reactive, ref } from "@vue/composition-api";
+import DialogInfo from "./dialog/info";
 export default {
+  components: { DialogInfo },
   setup() {
+    /**数据 */
+    const dialogInfo = ref(false);
+    const keyword = ref("id");
+    const category = ref("");
+    const date = ref("");
+    const search_word = ref("");
+    /**对象数据 */
     const options = reactive([
       {
         value: 1,
@@ -113,16 +123,11 @@ export default {
         label: "行业信息"
       }
     ]);
-    const handleSizeChange = val => {};
-    const handleCurrentChange = val => {};
+
     const keywords = reactive([
       { value: "id", label: "ID" },
       { value: "title", label: "标题" }
     ]);
-    const keyword = ref("id");
-    const value = ref("");
-    const value2 = ref("");
-    const search_word = ref("");
     const tableData = reactive([
       {
         date: "2016-05-02",
@@ -145,16 +150,24 @@ export default {
         address: "上海市普陀区金沙江路 1516 弄"
       }
     ]);
+    /**方法 */
+    const handleSizeChange = val => {};
+    const handleCurrentChange = val => {};
+    // const handleAddClick = () => {
+    //   dialogInfo = true;
+    // };
     return {
       options,
-      value,
-      value2,
+      category,
+      date,
       keywords,
       keyword,
       search_word,
       tableData,
       handleSizeChange,
-      handleCurrentChange
+      handleCurrentChange,
+      // handleAddClick,
+      dialogInfo
     };
   }
 };
